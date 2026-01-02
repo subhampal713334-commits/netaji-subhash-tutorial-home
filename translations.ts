@@ -28,14 +28,7 @@ export const translations = {
     waitApproval: "Waiting for Approval",
     approvalNotice: "You will be able to access classes and materials once an admin approves your phone number.",
     classNotStarted: "Class hasn't started yet.",
-    classEnded: "This class session has ended.",
-    schedule: "Schedule",
-    weeklySchedule: "Weekly Schedule",
-    noSchedule: "No schedule available for this class.",
-    addSchedule: "Add Schedule Slot",
-    day: "Day",
-    subject: "Subject",
-    time: "Time Slot"
+    classEnded: "This class session has ended."
   },
   bn: {
     home: "হোম",
@@ -65,13 +58,6 @@ export const translations = {
     waitApproval: "অনুমোদনের জন্য অপেক্ষা করা হচ্ছে",
     approvalNotice: "অ্যাডমিন আপনার ফোন নম্বর অনুমোদন করার পর আপনি ক্লাস এবং উপকরণগুলি অ্যাক্সেস করতে পারবেন।",
     classNotStarted: "ক্লাস এখনও শুরু হয়নি।",
-    classEnded: "এই ক্লাসের সেশন শেষ হয়েছে।",
-    schedule: "রুটিন",
-    weeklySchedule: "সাপ্তাহিক রুটিন",
-    noSchedule: "এই ক্লাসের জন্য কোনো রুটিন নেই।",
-    addSchedule: "নতুন রুটিন যোগ করুন",
-    day: "দিন",
-    subject: "বিষয়",
-    time: "সময়"
+    classEnded: "এই ক্লাসের সেশন শেষ হয়েছে।"
   }
 };
