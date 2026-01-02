@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Course, UserProfile } from '../types';
+import { Course, UserProfile } from '../types.ts';
 
 const INITIAL_COURSES: Course[] = [
   { id: '1', title: 'Class 10 - All Subjects', description: 'Comprehensive package covering Mathematics, Sciences, and Languages for WBBSE Board Exams.', price: 350, duration: '1 Year', image_url: 'https://picsum.photos/400/250?random=11' },
