@@ -1,5 +1,5 @@
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { createClient } from '@supabase/supabase-js';
 
 // Updated Supabase Credentials for Project: oxfqmqnxccfvsoiqzdwi
 const supabaseUrl = 'https://oxfqmqnxccfvsoiqzdwi.supabase.co';

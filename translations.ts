@@ -9,15 +9,15 @@ export const translations = {
     signup: "Sign Up",
     dashboard: "Dashboard",
     logout: "Logout",
-    heroTitle: "NETAJI SUBHASH TUTORIAL HOME",
+    heroTitle: "Netaji Subhash Tutorial Home",
     heroSubtitle: "West Bengal Board of Secondary Education (WBBSE)",
-    onlineClasses: "ONLINE BASED CLASSES",
+    onlineClasses: "Online Based Classes",
     classes: "Classes:",
     fees: "Fees:",
     classTime: "Class Time:",
     subjects: "Subjects:",
     regFee: "Registration Fees - 10 rs.",
-    whatsappMsg: "To get the registration link, send 'HI' to the above numbers on 'whatsapp'.",
+    whatsappMsg: "To get the registration link, send 'HI' to our WhatsApp numbers.",
     liveNow: "Live Now",
     joinClass: "Join Live Class",
     noLiveClass: "No active live classes right now.",
@@ -28,9 +28,7 @@ export const translations = {
     waitApproval: "Waiting for Approval",
     approvalNotice: "You will be able to access classes and materials once an admin approves your phone number.",
     classNotStarted: "Class hasn't started yet.",
-    classEnded: "This class session has ended.",
-    schedule: "Schedule",
-    classSchedule: "Class Schedule"
+    classEnded: "This class session has ended."
   },
   bn: {
     home: "হোম",
@@ -49,7 +47,7 @@ export const translations = {
     classTime: "ক্লাসের সময়:",
     subjects: "বিষয়:",
     regFee: "রেজিস্ট্রেশন ফিস - ১০ টাকা",
-    whatsappMsg: "রেজিস্ট্রেশন লিংক পাওয়ার জন্য উপরিউক্ত নম্বরগুলিতে 'whatsapp'-এ 'HI' লিখে পাঠান।",
+    whatsappMsg: "রেজিস্ট্রেশন লিংক পাওয়ার জন্য আমাদের WhatsApp নম্বরে 'HI' লিখে পাঠান।",
     liveNow: "লাইভ চলছে",
     joinClass: "লাইভ ক্লাসে যোগ দিন",
     noLiveClass: "এই মুহূর্তে কোনো লাইভ ক্লাস নেই।",
@@ -60,8 +58,6 @@ export const translations = {
     waitApproval: "অনুমোদনের জন্য অপেক্ষা করা হচ্ছে",
     approvalNotice: "অ্যাডমিন আপনার ফোন নম্বর অনুমোদন করার পর আপনি ক্লাস এবং উপকরণগুলি অ্যাক্সেস করতে পারবেন।",
     classNotStarted: "ক্লাস এখনও শুরু হয়নি।",
-    classEnded: "এই ক্লাসের সেশন শেষ হয়েছে।",
-    schedule: "সূচি",
-    classSchedule: "ক্লাস সূচি"
+    classEnded: "এই ক্লাসের সেশন শেষ হয়েছে।"
   }
 };

@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserProfile } from '../types';
-import { useLanguage } from '../LanguageContext';
-import { supabase } from '../supabase';
+import { UserProfile } from '../types.ts';
+import { useLanguage } from '../LanguageContext.tsx';
+import { supabase } from '../supabase.ts';
 
 interface SignupProps {
   onSignup: (user: UserProfile) => void;
@@ -24,7 +24,6 @@ const Signup: React.FC<SignupProps> = ({ onSignup }) => {
     setLoading(true);
 
     try {
-      // Check if phone exists
       const { data: existing } = await supabase
         .from('students')
         .select('phone')
@@ -37,7 +36,6 @@ const Signup: React.FC<SignupProps> = ({ onSignup }) => {
         return;
       }
 
-      // Insert new student
       const { data, error } = await supabase
         .from('students')
         .insert([{

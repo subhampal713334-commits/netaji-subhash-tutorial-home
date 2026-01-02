@@ -1,9 +1,9 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { HashRouter } from 'react-router-dom';
-import App from './App';
-import { LanguageProvider } from './LanguageContext';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App.tsx';
+import { LanguageProvider } from './LanguageContext.tsx';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -14,9 +14,9 @@ const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
     <LanguageProvider>
-      <HashRouter>
+      <BrowserRouter>
         <App />
-      </HashRouter>
+      </BrowserRouter>
     </LanguageProvider>
   </React.StrictMode>
 );

@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { UserProfile } from '../types';
-import { useLanguage } from '../LanguageContext';
-import Logo from './Logo';
+import { UserProfile } from '../types.ts';
+import { useLanguage } from '../LanguageContext.tsx';
+import Logo from './Logo.tsx';
 
 interface HeaderProps {
   user: UserProfile | null;
@@ -93,7 +93,6 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isOpen && (
         <div className="lg:hidden bg-[#E0F2FE] border-t border-cyan-100 p-6 space-y-4 shadow-2xl absolute w-full left-0 animate-in fade-in slide-in-from-top-4 duration-300">
            {navLinks.map((link) => (

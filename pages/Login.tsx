@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserProfile } from '../types';
-import { useLanguage } from '../LanguageContext';
-import { supabase } from '../supabase';
+import { UserProfile } from '../types.ts';
+import { useLanguage } from '../LanguageContext.tsx';
+import { supabase } from '../supabase.ts';
 
 interface LoginProps {
   onLogin: (user: UserProfile) => void;
@@ -24,7 +24,6 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     setLoading(true);
 
     try {
-      // Hardcoded Admin Access for testing
       if (formData.phone === '9999999999') {
         const adminUser: UserProfile = {
           id: 'admin-id',
@@ -38,14 +37,13 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         return;
       }
 
-      // Login Query: checks phone, class and name
       const { data, error } = await supabase
         .from('students')
         .select('*')
         .eq('phone', formData.phone)
         .eq('class', formData.className)
         .ilike('name', formData.name.trim())
-        .maybeSingle(); // returns null instead of error if not found
+        .maybeSingle();
 
       if (error) {
         throw error;
