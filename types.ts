@@ -31,6 +31,15 @@ export interface LiveClass {
   end_time: string;
 }
 
+export interface Schedule {
+  id: string;
+  class: string;
+  subject: string;
+  day: string;
+  time_slot: string;
+  created_at?: string;
+}
+
 export interface Material {
   id: string;
   class: string;

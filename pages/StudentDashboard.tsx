@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
-import { UserProfile, LiveClass, Material } from '../types.ts';
+import { UserProfile, LiveClass, Material, Schedule } from '../types.ts';
 import { useLanguage } from '../LanguageContext.tsx';
 import { supabase } from '../supabase.ts';
 
@@ -17,6 +17,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ user, onLogout }) =
   const [activeLiveClass, setActiveLiveClass] = useState<LiveClass | null>(null);
   const [isWithinTime, setIsWithinTime] = useState(false);
   const [materials, setMaterials] = useState<Material[]>([]);
+  const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -64,6 +65,15 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ user, onLogout }) =
             .order('created_at', { ascending: false });
 
           if (matData) setMaterials(matData as Material[]);
+
+          // Fetch Schedule
+          const { data: schData } = await supabase
+            .from('schedules')
+            .select('*')
+            .eq('class', student.class)
+            .order('day');
+
+          if (schData) setSchedules(schData as Schedule[]);
         }
       }
     } catch (err) {
@@ -82,6 +92,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ user, onLogout }) =
   const sidebarLinks = [
     { name: t.dashboard, path: '', icon: 'fa-home' },
     { name: 'Live Classes', path: 'live', icon: 'fa-video' },
+    { name: t.schedule, path: 'schedule', icon: 'fa-calendar-alt' },
     { name: 'Study Materials', path: 'materials', icon: 'fa-file-pdf' },
   ];
 
@@ -185,7 +196,26 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ user, onLogout }) =
                 </div>
               )}
 
-              <div className="grid grid-cols-1 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                   <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                      <i className="fas fa-calendar-alt text-blue-600 mr-3"></i> {t.schedule}
+                   </h3>
+                   <div className="space-y-3">
+                      {schedules.slice(0, 4).map(s => (
+                        <div key={s.id} className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                           <span className="font-bold text-slate-700">{s.day}</span>
+                           <span className="text-blue-600 font-black">{s.subject}</span>
+                           <span className="text-slate-500 text-xs">{s.time_slot}</span>
+                        </div>
+                      ))}
+                      {schedules.length > 0 && (
+                        <Link to="schedule" className="block text-center text-blue-600 font-bold text-sm mt-4 uppercase tracking-tighter">View Full Schedule</Link>
+                      )}
+                      {schedules.length === 0 && <p className="text-slate-400 italic text-center py-4">No routines found.</p>}
+                   </div>
+                </div>
+
                 <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
                    <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center">
                       <i className="fas fa-file-pdf text-red-600 mr-3"></i> Recent Materials
@@ -221,6 +251,42 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ user, onLogout }) =
                     )}
                  </div>
               ) : <p className="text-slate-400">{t.noLiveClass}</p>}
+            </div>
+          } />
+
+          <Route path="schedule" element={
+            <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+               <h2 className="text-2xl font-bold mb-8 flex items-center">
+                  <i className="fas fa-calendar-week text-blue-600 mr-4"></i> {t.weeklySchedule}
+               </h2>
+               <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                     <thead>
+                        <tr className="border-b-2 border-slate-100">
+                           <th className="py-4 font-black text-slate-400 uppercase text-xs">{t.day}</th>
+                           <th className="py-4 font-black text-slate-400 uppercase text-xs">{t.subject}</th>
+                           <th className="py-4 font-black text-slate-400 uppercase text-xs">{t.time}</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        {schedules.map(s => (
+                           <tr key={s.id} className="border-b border-slate-50 hover:bg-slate-50 transition">
+                              <td className="py-5 font-bold text-slate-900">{s.day}</td>
+                              <td className="py-5">
+                                 <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-black text-sm">{s.subject}</span>
+                              </td>
+                              <td className="py-5 font-mono text-slate-600">{s.time_slot}</td>
+                           </tr>
+                        ))}
+                     </tbody>
+                  </table>
+               </div>
+               {schedules.length === 0 && (
+                  <div className="text-center py-16">
+                     <i className="fas fa-calendar-times text-slate-200 text-5xl mb-4"></i>
+                     <p className="text-slate-400 font-bold uppercase">{t.noSchedule}</p>
+                  </div>
+               )}
             </div>
           } />
 

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
-import { UserProfile, LiveClass, Material } from '../types.ts';
+import { UserProfile, LiveClass, Material, Schedule } from '../types.ts';
 import { supabase } from '../supabase.ts';
 
 interface AdminDashboardProps {
@@ -17,11 +17,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
   const [targetClass, setTargetClass] = useState('Class 10');
   const [students, setStudents] = useState<any[]>([]);
   const [materials, setMaterials] = useState<any[]>([]);
+  const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [loading, setLoading] = useState(false);
   
   const [matTitle, setMatTitle] = useState('');
   const [matClass, setMatClass] = useState('Class 10');
   const [matUrl, setMatUrl] = useState('');
+
+  const [schDay, setSchDay] = useState('Monday');
+  const [schSubject, setSchSubject] = useState('');
+  const [schTime, setSchTime] = useState('');
+  const [schClass, setSchClass] = useState('Class 10');
 
   const loadData = async () => {
     try {
@@ -30,6 +36,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
       
       const { data: matData } = await supabase.from('materials').select('*').order('created_at', { ascending: false });
       if (matData) setMaterials(matData);
+
+      const { data: schData } = await supabase.from('schedules').select('*').order('created_at', { ascending: false });
+      if (schData) setSchedules(schData as Schedule[]);
     } catch (e) {
       console.error("Admin Load Error:", e);
     }
@@ -94,9 +103,38 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
     setLoading(false);
   };
 
+  const handleAddSchedule = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!schSubject || !schTime) return alert("Please fill all fields");
+    setLoading(true);
+
+    const { error } = await supabase.from('schedules').insert([{
+      class: schClass,
+      subject: schSubject,
+      day: schDay,
+      time_slot: schTime
+    }]);
+
+    if (error) {
+      alert("Error: " + error.message);
+    } else {
+      alert("Schedule updated!");
+      setSchSubject('');
+      setSchTime('');
+      loadData();
+    }
+    setLoading(false);
+  };
+
   const deleteMaterial = async (id: string) => {
     if (!confirm("Delete this material?")) return;
     await supabase.from('materials').delete().eq('id', id);
+    loadData();
+  };
+
+  const deleteSchedule = async (id: string) => {
+    if (!confirm("Delete this schedule slot?")) return;
+    await supabase.from('schedules').delete().eq('id', id);
     loadData();
   };
 
@@ -111,6 +149,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
         </Link>
         <Link to="/dashboard/admin" className={`flex items-center px-8 py-4 font-bold transition ${location.pathname === '/dashboard/admin' ? 'bg-slate-800 text-blue-400' : 'text-slate-300 hover:bg-slate-800'}`}>
           <i className="fas fa-users mr-4"></i> Students
+        </Link>
+        <Link to="/dashboard/admin/schedule" className={`flex items-center px-8 py-4 font-bold transition ${location.pathname.includes('/schedule') ? 'bg-slate-800 text-blue-400' : 'text-slate-300 hover:bg-slate-800'}`}>
+          <i className="fas fa-calendar-alt mr-4"></i> Schedule
         </Link>
         <Link to="/dashboard/admin/live" className={`flex items-center px-8 py-4 font-bold transition ${location.pathname.includes('/live') ? 'bg-slate-800 text-blue-400' : 'text-slate-300 hover:bg-slate-800'}`}>
           <i className="fas fa-video mr-4"></i> Live Class
@@ -165,6 +206,55 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
                        ))}
                     </tbody>
                   </table>
+               </div>
+            </div>
+          } />
+
+          <Route path="schedule" element={
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+               <div className="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 h-fit">
+                  <h3 className="text-2xl font-bold mb-8 uppercase tracking-tight">Manage Schedule</h3>
+                  <form onSubmit={handleAddSchedule} className="space-y-4">
+                     <div>
+                        <label className="text-xs font-black uppercase text-slate-400 mb-1 block">Grade</label>
+                        <select value={schClass} onChange={(e) => setSchClass(e.target.value)} className="w-full p-4 border rounded-xl bg-slate-50 font-bold">
+                           <option>Class 10</option><option>Class 9</option><option>Class 8</option><option>Class 7</option><option>Class 6</option><option>Class 5</option>
+                        </select>
+                     </div>
+                     <div className="grid grid-cols-2 gap-4">
+                        <div>
+                           <label className="text-xs font-black uppercase text-slate-400 mb-1 block">Day</label>
+                           <select value={schDay} onChange={(e) => setSchDay(e.target.value)} className="w-full p-4 border rounded-xl bg-slate-50 font-bold">
+                              <option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+                           </select>
+                        </div>
+                        <div>
+                           <label className="text-xs font-black uppercase text-slate-400 mb-1 block">Subject</label>
+                           <input value={schSubject} onChange={(e) => setSchSubject(e.target.value)} className="w-full p-4 border rounded-xl bg-slate-50 font-bold" placeholder="e.g. History" />
+                        </div>
+                     </div>
+                     <div>
+                        <label className="text-xs font-black uppercase text-slate-400 mb-1 block">Time Slot</label>
+                        <input value={schTime} onChange={(e) => setSchTime(e.target.value)} className="w-full p-4 border rounded-xl bg-slate-50 font-bold" placeholder="e.g. 05:00 PM - 06:30 PM" />
+                     </div>
+                     <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition">Add Entry</button>
+                  </form>
+               </div>
+               <div className="bg-white p-10 rounded-3xl shadow-sm border border-slate-100">
+                  <h3 className="text-2xl font-bold mb-8 uppercase tracking-tight">Existing Routines</h3>
+                  <div className="space-y-4">
+                     {schedules.map(s => (
+                        <div key={s.id} className="p-4 border rounded-xl flex justify-between items-center bg-slate-50">
+                           <div className="min-w-0">
+                              <p className="text-[10px] font-black uppercase text-blue-600">{s.class} • {s.day}</p>
+                              <h4 className="font-bold text-slate-800 text-sm truncate">{s.subject}</h4>
+                              <p className="text-xs text-slate-500 font-mono">{s.time_slot}</p>
+                           </div>
+                           <button onClick={() => deleteSchedule(s.id)} className="text-red-400 p-2 hover:bg-red-50 rounded-full transition ml-2"><i className="fas fa-trash"></i></button>
+                        </div>
+                     ))}
+                     {schedules.length === 0 && <p className="text-slate-400 italic text-center py-12">No routines set yet.</p>}
+                  </div>
                </div>
             </div>
           } />

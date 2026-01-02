@@ -6,17 +6,18 @@ import App from './App.tsx';
 import { LanguageProvider } from './LanguageContext.tsx';
 
 const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
-}
 
-const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <LanguageProvider>
-      <HashRouter>
-        <App />
-      </HashRouter>
-    </LanguageProvider>
-  </React.StrictMode>
-);
+if (!rootElement) {
+  console.error("FATAL: Root element not found. Check index.html.");
+} else {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <LanguageProvider>
+        <HashRouter>
+          <App />
+        </HashRouter>
+      </LanguageProvider>
+    </React.StrictMode>
+  );
+}
