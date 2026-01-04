@@ -46,7 +46,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
 
   useEffect(() => {
     loadData();
-    const interval = setInterval(loadData, 15000);
+    const interval = setInterval(loadData, 10000); // Faster polling for admin
     return () => clearInterval(interval);
   }, []);
 
@@ -57,15 +57,16 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
   };
 
   const startLiveClass = async () => {
-    if (!liveTitle || !meetLink) return alert("Fill all fields");
+    if (!liveTitle.trim() || !meetLink.trim()) return alert("Fill all fields");
     setLoading(true);
     const now = new Date();
     const end = new Date(now.getTime() + 2 * 60 * 60 * 1000);
     
+    // TRIMMING IS CRITICAL HERE
     const { error } = await supabase.from('classes').insert([{
-      class: targetClass,
-      title: liveTitle,
-      meet_link: meetLink,
+      class: targetClass.trim(),
+      title: liveTitle.trim(),
+      meet_link: meetLink.trim(),
       start_time: now.toISOString(),
       end_time: end.toISOString()
     }]);
@@ -73,7 +74,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
     if (error) {
       alert("Error: " + error.message);
     } else {
-      alert("Class broadcasted!");
+      alert(`Class broadcasted successfully for ${targetClass}!`);
       setLiveTitle('');
       setMeetLink('');
     }
@@ -82,20 +83,21 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
 
   const handleAddMaterial = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!matTitle || !matUrl) return alert("Please fill all fields");
+    if (!matTitle.trim() || !matUrl.trim()) return alert("Please fill all fields");
     setLoading(true);
     
+    // TRIMMING IS CRITICAL HERE
     const { error } = await supabase.from('materials').insert([{
-      class: matClass,
-      title: matTitle,
+      class: matClass.trim(),
+      title: matTitle.trim(),
       type: matUrl.includes('drive.google.com') ? 'drive' : 'pdf',
-      resource_url: matUrl
+      resource_url: matUrl.trim()
     }]);
 
     if (error) {
       alert("Error: " + error.message);
     } else {
-      alert("Material posted!");
+      alert(`Material "${matTitle}" published for ${matClass}!`);
       setMatTitle('');
       setMatUrl('');
       loadData();
@@ -105,22 +107,21 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
 
   const handleAddSchedule = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!schSubject || !schTime) return alert("Please fill all fields");
+    if (!schSubject.trim() || !schTime.trim()) return alert("Please fill all fields");
     setLoading(true);
 
-    // We send 'day' to match our DB repair script
+    // TRIMMING IS CRITICAL HERE
     const { error } = await supabase.from('schedules').insert([{
-      class: schClass,
-      subject: schSubject,
-      day: schDay,
-      time_slot: schTime
+      class: schClass.trim(),
+      subject: schSubject.trim(),
+      day: schDay.trim(),
+      time_slot: schTime.trim()
     }]);
 
     if (error) {
-      console.error("Supabase Schedule Error:", error);
-      alert("Error saving schedule: " + error.message + "\nCheck if the 'day' column exists in your Supabase table.");
+      alert("Error: " + error.message);
     } else {
-      alert("Schedule updated!");
+      alert(`Routine updated for ${schClass} on ${schDay}!`);
       setSchSubject('');
       setSchTime('');
       loadData();
