@@ -23,11 +23,16 @@ const Signup: React.FC<SignupProps> = ({ onSignup }) => {
     e.preventDefault();
     setLoading(true);
 
+    const cleanName = formData.name.trim();
+    const cleanPhone = formData.phone.trim();
+    const cleanClass = formData.className.trim();
+
     try {
+      // Check for existing
       const { data: existing } = await supabase
         .from('students')
         .select('phone')
-        .eq('phone', formData.phone)
+        .eq('phone', cleanPhone)
         .maybeSingle();
 
       if (existing) {
@@ -36,12 +41,13 @@ const Signup: React.FC<SignupProps> = ({ onSignup }) => {
         return;
       }
 
+      // Insert new student
       const { data, error } = await supabase
         .from('students')
         .insert([{
-          name: formData.name,
-          phone: formData.phone,
-          class: formData.className,
+          name: cleanName,
+          phone: cleanPhone,
+          class: cleanClass,
           status: 'pending'
         }])
         .select()
@@ -60,8 +66,8 @@ const Signup: React.FC<SignupProps> = ({ onSignup }) => {
 
       onSignup(userData);
       navigate('/dashboard/student');
-    } catch (err) {
-      alert("Error during registration: " + (err as Error).message);
+    } catch (err: any) {
+      alert("Registration failed: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -72,42 +78,62 @@ const Signup: React.FC<SignupProps> = ({ onSignup }) => {
   };
 
   return (
-    <div className="min-h-[80vh] bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Join NST Home</h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Already have an account? <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">Login here</Link>
+    <div className="min-h-[80vh] bg-gray-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
+        <h2 className="text-3xl font-black text-gray-900 tracking-tight">Create Account</h2>
+        <p className="mt-2 text-sm text-gray-600 font-medium">
+          Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Login here</Link>
         </p>
       </div>
+
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow-xl rounded-2xl sm:px-10 border border-gray-100">
-          <form className="space-y-5" onSubmit={handleSubmit}>
+        <div className="bg-white py-10 px-8 shadow-2xl rounded-[2.5rem] border border-gray-100 ring-1 ring-gray-200/50">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">Full Name</label>
-              <div className="mt-1">
-                <input id="name" name="name" type="text" required value={formData.name} onChange={handleChange} className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="John Doe" />
-              </div>
+              <label className="block text-[10px] font-black uppercase text-gray-400 mb-1 ml-1 tracking-widest">Your Full Name</label>
+              <input 
+                name="name" 
+                type="text" 
+                required 
+                value={formData.name} 
+                onChange={handleChange} 
+                className="w-full px-5 py-4 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition font-bold" 
+                placeholder="John Doe" 
+              />
             </div>
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">{t.phone}</label>
-              <div className="mt-1">
-                <input id="phone" name="phone" type="tel" required value={formData.phone} onChange={handleChange} className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="9832878993" />
-              </div>
+              <label className="block text-[10px] font-black uppercase text-gray-400 mb-1 ml-1 tracking-widest">{t.phone}</label>
+              <input 
+                name="phone" 
+                type="tel" 
+                required 
+                value={formData.phone} 
+                onChange={handleChange} 
+                className="w-full px-5 py-4 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition font-bold" 
+                placeholder="e.g. 9832878993" 
+              />
             </div>
             <div>
-              <label htmlFor="className" className="block text-sm font-medium text-gray-700">Select Class</label>
-              <div className="mt-1">
-                <select id="className" name="className" value={formData.className} onChange={handleChange} className="block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white">
-                  <option>Class 10</option><option>Class 9</option><option>Class 8</option><option>Class 7</option><option>Class 6</option><option>Class 5</option>
-                </select>
-              </div>
+              <label className="block text-[10px] font-black uppercase text-gray-400 mb-1 ml-1 tracking-widest">Select Class</label>
+              <select 
+                name="className" 
+                value={formData.className} 
+                onChange={handleChange} 
+                className="w-full px-5 py-4 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition font-bold bg-white"
+              >
+                <option>Class 10</option><option>Class 9</option><option>Class 8</option><option>Class 7</option><option>Class 6</option><option>Class 5</option>
+              </select>
             </div>
-            <div>
-              <button type="submit" disabled={loading} className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white transition-all ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}>
-                {loading ? <><i className="fas fa-spinner fa-spin mr-2"></i>Requesting Access...</> : 'Request Access'}
-              </button>
-            </div>
-            <p className="text-xs text-center text-gray-500 mt-4 italic">* Note: Your account will require admin approval after registration.</p>
+            <button 
+              type="submit" 
+              disabled={loading} 
+              className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-lg shadow-xl hover:bg-blue-700 active:scale-[0.98] transition-all flex items-center justify-center uppercase tracking-widest"
+            >
+              {loading ? <><i className="fas fa-spinner fa-spin mr-3"></i>Processing...</> : 'Request Access'}
+            </button>
+            <p className="text-[10px] text-center text-gray-400 font-bold uppercase tracking-wider mt-4">
+              * Account requires admin approval before access
+            </p>
           </form>
         </div>
       </div>

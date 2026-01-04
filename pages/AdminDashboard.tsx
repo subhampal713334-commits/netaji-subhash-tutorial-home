@@ -108,6 +108,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
     if (!schSubject || !schTime) return alert("Please fill all fields");
     setLoading(true);
 
+    // We send 'day' to match our DB repair script
     const { error } = await supabase.from('schedules').insert([{
       class: schClass,
       subject: schSubject,
@@ -116,7 +117,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
     }]);
 
     if (error) {
-      alert("Error: " + error.message);
+      console.error("Supabase Schedule Error:", error);
+      alert("Error saving schedule: " + error.message + "\nCheck if the 'day' column exists in your Supabase table.");
     } else {
       alert("Schedule updated!");
       setSchSubject('');
@@ -189,7 +191,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
-      {/* Mobile Top Bar */}
       <div className="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center sticky top-0 z-[60] shadow-md">
         <span className="text-lg font-black text-blue-400">ADMIN PANEL</span>
         <button onClick={() => setIsMobileMenuOpen(true)} className="p-2">
@@ -197,7 +198,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
         </button>
       </div>
 
-      {/* Mobile Sidebar Overlay */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 bg-black/60 z-[70] md:hidden backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)}>
           <div className="w-72 bg-slate-900 h-full flex flex-col shadow-2xl animate-in slide-in-from-left duration-300" onClick={e => e.stopPropagation()}>
@@ -206,7 +206,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
         </div>
       )}
 
-      {/* Desktop Sidebar */}
       <aside className="w-64 bg-slate-900 text-white hidden md:flex flex-col h-screen sticky top-0">
         <SidebarContent />
       </aside>
@@ -392,7 +391,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }) => {
         </Routes>
       </main>
 
-      {/* CSS for custom scrollbar in dashboard lists */}
       <style>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 5px;
