@@ -1,20 +1,34 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Netaji Subhash Tutorial Home - EdTech Platform
 
-# Run and deploy your AI Studio app
+A comprehensive EdTech solution designed specifically for the **Netaji Subhash Tutorial Home** coaching institute. This platform facilitates seamless academic management for students following the West Bengal Board of Secondary Education (WBBSE) curriculum (Classes 5 to 10).
 
-This contains everything you need to run your app locally.
+## 🚀 Key Features
 
-View your app in AI Studio: https://ai.studio/apps/drive/1mGzVK9mqE80wWryPHuJzDH2kTm-sKBeF
+### 👨‍🎓 Student Experience
+- **Live Class Portal**: Direct integration with Google Meet for real-time virtual classrooms.
+- **Digital Library**: Access to chapter-wise PDF notes and Google Drive resources.
+- **Weekly Routine**: A dedicated dashboard to track subjects and class timings.
+- **Bilingual Support**: Full support for both English and Bengali languages.
 
-## Run Locally
+### 🛡️ Admin Control
+- **Student Approval System**: Secure manual approval process for new registrations.
+- **Live Broadcast**: Ability to launch and announce live sessions instantly.
+- **Resource Management**: Easy upload and categorization of study materials.
+- **Schedule Management**: Dynamic updates to the weekly academic routine.
 
-**Prerequisites:**  Node.js
+## 🛠️ Technology Stack
+- **Frontend**: React 19 + TypeScript
+- **Styling**: Tailwind CSS
+- **Backend/Database**: Supabase (PostgreSQL)
+- **Deployment**: Vercel-ready configuration
 
+## 🔒 Security
+The platform utilizes **Supabase Row Level Security (RLS)** to ensure that student data is protected. Access to study materials and live classes is restricted to approved students only.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 📞 Contact Information
+- **Phone**: +91 9832878993 / +91 8101321954
+- **WhatsApp**: 9339958434
+- **Email**: info@nstutorial.com
+
+---
+*© 2024 Netaji Subhash Tutorial Home. All rights reserved.*
